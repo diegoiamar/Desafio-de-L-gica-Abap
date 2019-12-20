@@ -1,0 +1,218 @@
+*&---------------------------------------------------------------------*
+*& Report ZTESTE100
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZTESTE100.
+
+* Varáveis
+DATA: v_valor(132) TYPE c,
+      v_auxiliar   TYPE TDLCOUNT,
+      v_inteiro    TYPE i,
+      v_contador   TYPE i,
+      v_contador2  TYPE i,
+      v_check      TYPE c,
+      v_check2     TYPE c,
+      v_check3     TYPE c,
+      v_check4     TYPE c,
+      v_check5     TYPE c.
+
+
+* Tela de Seleção
+SELECTION-SCREEN BEGIN OF BLOCK b1 WITH FRAME TITLE text-000.
+
+  PARAMETERS: p_valor(10) TYPE c,
+              p_opt1 RADIOBUTTON GROUP g1,
+              p_opt2 RADIOBUTTON GROUP g1.
+
+SELECTION-SCREEN END OF BLOCK b1.
+
+START-OF-SELECTION.
+
+  IF p_opt1 = 'X'.
+
+    IF p_valor CA 'ABCDEFGHIJKLMNOPQRSTUVXZWY'.
+
+      MESSAGE i208(00) WITH text-002.
+
+      LEAVE LIST-PROCESSING.
+
+    ENDIF.
+
+    v_auxiliar = p_valor.
+
+    CALL FUNCTION 'CONVERT_NUMBER'
+      EXPORTING
+        TDLCOUNT         = v_auxiliar
+        TDNUMBERIN       = 'ROMAN'
+        TDUPPER          = 'X'
+        TDNUMFIXC        = '1'
+        TDNUMOUTL        = 0
+     IMPORTING
+        STRING           = v_valor.
+
+  ELSE.
+
+    IF p_valor CA '0123456789'.
+
+      MESSAGE i208(00) WITH text-001.
+
+      LEAVE LIST-PROCESSING.
+
+    ENDIF.
+
+    v_inteiro = STRLEN( p_valor ).
+
+    WHILE v_contador <= v_inteiro.
+
+      v_contador = v_contador + 1.
+
+      IF p_valor+v_contador2(1) = 'I'.
+
+        IF p_valor+v_contador2(2) = 'II'.
+
+          IF p_valor+v_contador2(3) = 'III'.
+
+            v_valor = v_valor + 3.
+
+            v_contador2 = v_contador2 + 2.
+
+          ELSE.
+
+            v_valor = v_valor + 2.
+
+            v_contador2 = v_contador2 + 1.
+
+          ENDIF.
+
+        ELSEIF p_valor+v_contador2(2) = 'IV'.
+
+          v_valor = v_valor + 4.
+
+          v_contador2 = v_contador2 + 1.
+
+          v_check = 'X'.
+
+        ELSEIF p_valor+v_contador2(2) = 'IX'.
+
+          v_valor = v_valor + 9.
+
+          v_contador2 = v_contador2 + 1.
+
+          v_check2 = 'X'.
+
+        ELSEIF p_valor+v_contador2(2) = 'IL'.
+
+          v_valor = v_valor + 49.
+
+          v_contador2 = v_contador2 + 1.
+
+          v_check3 = 'X'.
+
+        ELSEIF p_valor+v_contador2(2) = 'IC'.
+
+          v_valor = v_valor + 99.
+
+          v_contador2 = v_contador2 + 1.
+
+          v_check4 = 'X'.
+
+        ELSEIF p_valor+v_contador2(2) = 'ID'.
+
+          v_valor = v_valor + 499.
+
+          v_contador2 = v_contador2 + 1.
+
+          v_check5 = 'X'.
+
+        ENDIF.
+
+      ELSEIF p_valor+v_contador2(2) = 'XL'.
+
+        v_valor = v_valor + 40.
+
+        v_contador2 = v_contador2 + 1.
+
+        v_check3 = 'X'.
+
+      ELSEIF p_valor+v_contador2(2) = 'XC'.
+
+        v_valor = v_valor + 90.
+
+        v_contador2 = v_contador2 + 1.
+
+        v_check4 = 'X'.
+
+      ELSEIF p_valor+v_contador2(2) = 'CD'.
+
+        v_valor = v_valor + 400.
+
+        v_contador2 = v_contador2 + 1.
+
+        v_check5 = 'X'.
+
+      ELSEIF p_valor+v_contador2(1) = 'I'.
+
+        v_valor = v_valor + 1.
+
+      ENDIF.
+
+      IF v_check IS INITIAL.
+
+        IF p_valor+v_contador2(1) = 'V'.
+
+          v_valor = v_valor + 5.
+
+        ENDIF.
+
+      ENDIF.
+
+      IF v_check2 IS INITIAL.
+
+        IF p_valor+v_contador2(1) = 'X'.
+
+          v_valor = v_valor + 10.
+
+        ENDIF.
+
+      ENDIF.
+
+      IF v_check3 IS INITIAL.
+
+        IF p_valor+v_contador2(1) = 'L'.
+
+          v_valor = v_valor + 50.
+
+        ENDIF.
+
+      ENDIF.
+
+      IF v_check4 IS INITIAL.
+
+        IF p_valor+v_contador2(1) = 'C'.
+
+          v_valor = v_valor + 100.
+
+        ENDIF.
+
+      ENDIF.
+
+      IF v_check5 IS INITIAL.
+
+        IF p_valor+v_contador2(1) = 'D'.
+
+          v_valor = v_valor + 500.
+
+        ENDIF.
+
+      ENDIF.
+
+      v_contador2 = v_contador2 + 1.
+
+      CLEAR: v_check, v_check2, v_check3, v_check4, v_check5.
+
+    ENDWHILE.
+
+  ENDIF.
+
+  WRITE v_valor.
